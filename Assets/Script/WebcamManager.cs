@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class WebcamManager : MonoBehaviour
@@ -8,6 +9,8 @@ public class WebcamManager : MonoBehaviour
     private WebCamTexture webCamTexture;
     private bool isPlay = false;
     private Color32[] frameData;
+    public GameObject player;
+    public GameObject[] emotionsUI;
     
     // Start is called before the first frame update
     void Start()
@@ -52,7 +55,29 @@ public class WebcamManager : MonoBehaviour
         Debug.Log(filePath);
         File.WriteAllBytes(filePath,img);
 
-        // TODO PYTHON
+        // Reading PYTHON Json
+        if (File.Exists(Application.dataPath + "/test.json"))
+        {
+            
+            string jsonStr = File.ReadAllText(Application.dataPath + "/test.json");
+            List<Emotion> jsonEmotionDatas = new List<Emotion>();
+            if (jsonStr!= null && jsonStr!="")jsonEmotionDatas = JsonUtility.FromJson<EmotionJson>(jsonStr).datas;
+
+            // Draw UI Graph
+            for (int i = 0; i < jsonEmotionDatas.Count; i++)
+            {
+                GameObject emotionSlider = emotionsUI[i];
+                // Set Emotion Name
+                Text text = emotionSlider.GetComponentInChildren<Text>();
+                text.text = jsonEmotionDatas[i].name;
+                // Set Emotion Ratio value
+                Slider slider = emotionSlider.GetComponentInChildren<Slider>();
+                slider.value = jsonEmotionDatas[i].value;
+                Debug.Log(text.text + ":" + slider.value.ToString());
+            }
+        }
+        //PlayerController playerController = player.GetComponent<PlayerController>();
+        // TODO playerController
     }
 
     void OnGUI()
