@@ -45,13 +45,13 @@ while True:
     preds = emotion_classifier.predict(roi)[0]
     emotion_probability = np.max(preds)
     label = EMOTIONS[preds.argmax()]
-    labels = []
+    labels = {"datas":[]}
     for (i, (emotion, prob)) in enumerate(zip(EMOTIONS, preds)):
         # construct the label text
         label = {
             "name": emotion,
             "value": "{:.2f}".format(prob)
         }
-        labels.append(label)
-    with open('../Assets/result.json', 'w') as fp:
+        labels.datas.append(label)
+    with open('../Assets/test.json', 'w') as fp:
         json.dump(labels, fp)
