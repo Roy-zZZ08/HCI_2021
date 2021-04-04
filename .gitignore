@@ -1,3 +1,5 @@
 Logs/
 UserSettings/
 Library/
+.vscode
+.DS_Store
