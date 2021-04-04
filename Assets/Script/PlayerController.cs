@@ -16,15 +16,16 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb=GetComponent<Rigidbody2D>();
-        anim=GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
-    void Update() 
+    void Update()
     {
         //Movement();
         SwitchAnim();
+        anim.SetFloat("running", Mathf.Abs(rb.velocity.x));
     }
 
     public void Movement(float horizontalMove)
@@ -34,15 +35,15 @@ public class PlayerController : MonoBehaviour
 
         //if(horizontalMove!=0.0f)
         //{
-            rb.velocity=new Vector2(horizontalMove*speed*Time.deltaTime,rb.velocity.y);
-            anim.SetFloat("running",Mathf.Abs(horizontalMove));
+        rb.velocity = new Vector2(horizontalMove * speed * Time.deltaTime, rb.velocity.y);
+
         //}
-       // if(facedirection!=0.0f)
+        // if(facedirection!=0.0f)
         //{
-         //   transform.localScale=new Vector3(facedirection,1,1);
+        //   transform.localScale=new Vector3(facedirection,1,1);
         //}
 
-        if(Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump"))
         {
             Jump();
         }
@@ -59,33 +60,35 @@ public class PlayerController : MonoBehaviour
     }
     void SwitchAnim()
     {
-        anim.SetBool("idle",false);
-        if(anim.GetBool("jumping"))
-        { 
-            if(rb.velocity.y<0)
-            {
-                anim.SetBool("jumping",false);
-                anim.SetBool("falling",true);
-            }
-        }else if(coll.IsTouchingLayers(ground))
+        anim.SetBool("idle", false);
+        if (anim.GetBool("jumping"))
         {
-            isJump=false;
-            anim.SetBool("falling",false);
-            anim.SetBool("idle",true);
+            if (rb.velocity.y < 0)
+            {
+                anim.SetBool("jumping", false);
+                anim.SetBool("falling", true);
+            }
+        }
+        else if (coll.IsTouchingLayers(ground))
+        {
+            isJump = false;
+            anim.SetBool("falling", false);
+            anim.SetBool("idle", true);
         }
     }
 
     //碰撞触发器
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag=="DeadLine")
+        if (collision.tag == "DeadLine")
         {
-            Invoke("Restart",1f);//延迟时间
+            Invoke("Restart", 1f);//延迟时间
         }
     }
 
 
-    void Restart(){
+    void Restart()
+    {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
