@@ -70,10 +70,22 @@ public class WebcamManager : MonoBehaviour
                 // Set Emotion Name
                 Text text = emotionSlider.GetComponentInChildren<Text>();
                 text.text = jsonEmotionDatas[i].name;
+
                 // Set Emotion Ratio value
                 Slider slider = emotionSlider.GetComponentInChildren<Slider>();
                 slider.value = jsonEmotionDatas[i].value;
                 Debug.Log(text.text + ":" + slider.value.ToString());
+
+                PlayerController playerController = player.GetComponent<PlayerController>();
+
+                if (text.text == "happy" && slider.value > 0.5f)
+                {
+                    playerController.Movement(slider.value);
+                }
+                if(text.text == "surprised" && slider.value > 0.5f)
+                {
+                    playerController.Jump();
+                }
             }
         }
         //PlayerController playerController = player.GetComponent<PlayerController>();

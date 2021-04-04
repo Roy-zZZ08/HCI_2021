@@ -23,36 +23,40 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update() 
     {
-        Movement();
+        //Movement();
         SwitchAnim();
     }
 
-    void Movement()
+    public void Movement(float horizontalMove)
     {
-        float horizontalMove=Input.GetAxis("Horizontal");
-        float facedirection=Input.GetAxisRaw("Horizontal"); //保留-1，0，1
+        //float horizontalMove=Input.GetAxis("Horizontal");
+        //float facedirection=Input.GetAxisRaw("Horizontal"); //保留-1，0，1
 
-        if(horizontalMove!=0.0f)
-        {
+        //if(horizontalMove!=0.0f)
+        //{
             rb.velocity=new Vector2(horizontalMove*speed*Time.deltaTime,rb.velocity.y);
-            anim.SetFloat("running",Mathf.Abs(facedirection));
-        }
-        if(facedirection!=0.0f)
-        {
-            transform.localScale=new Vector3(facedirection,1,1);
-        }
+            anim.SetFloat("running",Mathf.Abs(horizontalMove));
+        //}
+       // if(facedirection!=0.0f)
+        //{
+         //   transform.localScale=new Vector3(facedirection,1,1);
+        //}
 
         if(Input.GetButtonDown("Jump"))
         {
-            if(isJump==false){
-                isJump=true;
-                print("Jump");
-                rb.velocity=new Vector2(rb.velocity.x,jumpforce*Time.deltaTime);
-                anim.SetBool("jumping",true);
-            }
+            Jump();
         }
     }
-
+    public void Jump()
+    {
+        if (isJump == false)
+        {
+            isJump = true;
+            print("Jump");
+            rb.velocity = new Vector2(rb.velocity.x, jumpforce * Time.deltaTime);
+            anim.SetBool("jumping", true);
+        }
+    }
     void SwitchAnim()
     {
         anim.SetBool("idle",false);
