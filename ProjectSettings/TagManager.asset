@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - DeadLine
   layers:
   - Default
   - TransparentFX
@@ -43,6 +44,9 @@ TagManager:
     locked: 0
   - name: Back
     uniqueID: 1388342897
+    locked: 0
+  - name: Inter
+    uniqueID: 1594759663
     locked: 0
   - name: Front
     uniqueID: 572342535

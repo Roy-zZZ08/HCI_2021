@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,7 +12,6 @@ public class PlayerController : MonoBehaviour
     public float jumpforce;
     public LayerMask ground;
     bool isJump = false;
-
 
     // Start is called before the first frame update
     void Start()
@@ -69,5 +69,19 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("falling",false);
             anim.SetBool("idle",true);
         }
+    }
+
+    //碰撞触发器
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag=="DeadLine")
+        {
+            Invoke("Restart",1f);//延迟时间
+        }
+    }
+
+
+    void Restart(){
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
