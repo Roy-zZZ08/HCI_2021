@@ -4,22 +4,27 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public Rigidbody2D rb;
-    public Animator anim;
+    private Rigidbody2D rb;
+    private Animator anim;
+    public Collider2D coll;
     public float speed;
     public float jumpforce;
+    public LayerMask ground;
+    bool isJump = false;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb=GetComponent<Rigidbody2D>();
+        anim=GetComponent<Animator>();
     }
 
     // Update is called once per frame
-    void FixedUpdate() 
+    void Update() 
     {
         Movement();
+        SwitchAnim();
     }
 
     void Movement()
@@ -39,8 +44,30 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetButtonDown("Jump"))
         {
-            print("Jump");
-            rb.velocity=new Vector2(rb.velocity.x,jumpforce*Time.deltaTime);
+            if(isJump==false){
+                isJump=true;
+                print("Jump");
+                rb.velocity=new Vector2(rb.velocity.x,jumpforce*Time.deltaTime);
+                anim.SetBool("jumping",true);
+            }
+        }
+    }
+
+    void SwitchAnim()
+    {
+        anim.SetBool("idle",false);
+        if(anim.GetBool("jumping"))
+        { 
+            if(rb.velocity.y<0)
+            {
+                anim.SetBool("jumping",false);
+                anim.SetBool("falling",true);
+            }
+        }else if(coll.IsTouchingLayers(ground))
+        {
+            isJump=false;
+            anim.SetBool("falling",false);
+            anim.SetBool("idle",true);
         }
     }
 }
