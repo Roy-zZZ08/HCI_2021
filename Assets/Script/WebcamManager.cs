@@ -11,14 +11,22 @@ public class WebcamManager : MonoBehaviour
     private Color32[] frameData;
     public GameObject player;
     public GameObject[] emotionsUI;
+    public GameObject webTexturePoint0;
+    public GameObject webTexturePoint1;
+    public Camera camera;
+    public float x0, y0, x1, y1;
 
     // Start is called before the first frame update
     void Start()
     {
+
+#if UNITY_STANDALONE_OSX
+    Debug.Log("Stand Alone OSX");
         for (int i = 0; i < WebCamTexture.devices.Length; i++)
         {
             if (WebCamTexture.devices[i].isFrontFacing)
             {
+
                 Debug.Log(WebCamTexture.devices[i].name);
                 webCamTexture = new WebCamTexture(WebCamTexture.devices[i].name, 600, 360, 30);
                 webCamTexture.Play();
@@ -26,8 +34,33 @@ public class WebcamManager : MonoBehaviour
                 break;
             }
         }
+#endif
 
+#if UNITY_STANDALONE_WIN
+        Debug.Log("Stand Alone Windows");
+        for (int i = 1; i < WebCamTexture.devices.Length; i++)
+        {
+            if (WebCamTexture.devices[i].isFrontFacing)
+            {
 
+                Debug.Log(WebCamTexture.devices[i].name);
+                webCamTexture = new WebCamTexture(WebCamTexture.devices[i].name, 600, 360, 30);
+                webCamTexture.Play();
+                isPlay = true;
+                break;
+            }
+        }
+#endif
+
+        Debug.Log(webTexturePoint0.transform.position.x);
+        Debug.Log(webTexturePoint0.transform.position.y);
+        Debug.Log(webTexturePoint1.transform.position.x);
+        Debug.Log(webTexturePoint1.transform.position.y);
+        // Get Texture Display Position
+        x0 = webTexturePoint0.transform.position.x;
+        y0 = Screen.height - webTexturePoint0.transform.position.y;
+        x1 = webTexturePoint1.transform.position.x - x0;
+        y1 = Screen.height - webTexturePoint1.transform.position.y - y0;
     }
 
     // Update is called once per frame
@@ -74,7 +107,7 @@ public class WebcamManager : MonoBehaviour
                 // Set Emotion Ratio value
                 Slider slider = emotionSlider.GetComponentInChildren<Slider>();
                 slider.value = jsonEmotionDatas[i].value;
-                Debug.Log(text.text + ":" + slider.value.ToString());
+                //Debug.Log(text.text + ":" + slider.value.ToString());
 
                 PlayerController playerController = player.GetComponent<PlayerController>();
 
@@ -82,7 +115,7 @@ public class WebcamManager : MonoBehaviour
                 {
                     playerController.Movement(slider.value);
                 }
-                Debug.Log(slider.value);
+                //Debug.Log(slider.value);
                 if (text.text == "angry" && slider.value > 0.3f)
                 {
                     playerController.Movement(1.0f);
@@ -98,7 +131,7 @@ public class WebcamManager : MonoBehaviour
     {
         if (isPlay)
         {
-            GUI.DrawTexture(new Rect(0, 0, 200, 150), webCamTexture, ScaleMode.ScaleToFit);
+            GUI.DrawTexture(new Rect(x0, y0, x1, y1), webCamTexture, ScaleMode.ScaleToFit);
         }
     }
 }
